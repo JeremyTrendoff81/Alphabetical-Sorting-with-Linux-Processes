@@ -1,0 +1,151 @@
+Written by: Jeremy Trendoff - 101160306
+
+Algorithm Description
+---------------------------------------------------------------------------------------------------------
+
+Assignment 2 tasked students to sort an array of characters, of length 7, lexicographically using three 
+processes. Process 1 will sort the A1-A3 segment, process 2 will sort the A3-A5 segment, and process 3 will
+sort the A5-A7 segment. Upon starting the program, the user will be prompted for a 7 character string to sort.
+The program will also offer a debug mode for additional outputs if the user chooses. 
+
+To solve the mutual exclusion, I used two semaphores, one for the A3 element and one for the A5 element. 
+Process 1 will need access to the semaphore for A3, process 2 will need access to both semaphores, and
+process 3 will need access to the semaphore for A5. 
+
+To sort the letters lexicographically, I implemented functions to assign a letter, uppercase or lowercase,
+to an integer value in lexicographic order (A,a = 0, Z,z = 25) and receive a letter from the corresponding
+integer value. Any other character that isn't a letter will be assigned a value of one hundred and a character
+of '?'. The sorting algorithm first assigns the character values of the array to integers, then uses bubble
+sort to sort the values, and finally changes the integer values back to characters. Processes 1, 2, and 3
+will use these functions to sort their segments.
+
+To determine when the array is sorted fully, I implemented a sorted flag that will be triggered when the
+array is sorted fully. To determine when to set the flag, I am using a fourth process to constantly check if
+the array is fully sorted. The algorithm used for this sets all the characters in the array to integers and then
+checks that every number that comes before a number is less than the number immediately after it. If this is true,
+then the array is sorted. 
+
+This algorithm is correct because it satisfies the mutual exclusion requirement and stops the program when the array
+is fully sorted. Something to note is that because I used a separate process to determine if the full array is sorted,
+there may be extra calls of the sorting processes. This is ok because a sorted segment will not become unsorted. 
+
+---------------------------------------------------------------------------------------------------------
+
+Puesdocode of the CSORT.c Program
+---------------------------------------------------------------------------------------------------------
+
+// Include all relevant files and headers.
+
+int main(int argc, char const *argv[])
+{
+    int debug_mode;
+
+    // Set debug mode if the user chooses.
+
+    shared_use_state_t *shared_stuff;
+    void *shared_memory = (void *)0;
+    int shmid;
+
+    // Initialize the shared memory.
+
+    // Declare process ids for various processes needed.
+    pid_t pid, pid1, pid2, pid3, pid4
+    
+    // Run the process to Initialize the shared array, semaphores, and sorted flag.
+    pid2 = fork();
+    switch(pid2)
+    {
+        case -1:
+            ERROR
+            
+        case 0:
+           // Initialize the shared array, semaphores, and sorted flag.
+    }
+
+    // Wait for process to finish.
+
+    while(array is not sorted)
+    {
+        // Run the process to sort segment 1.
+        pid1 = fork();
+        switch(pid1)
+        {
+            case -1:
+                ERROR
+            
+            case 0:
+                if (array is not sorted)
+                {
+                    // Acquire semaphore A3
+                    if (segment is not sorted)
+                    {
+                        // Sort segment
+                    }
+                    // Release semaphore.
+                }
+        }
+
+        // Run the process to sort segment 2.
+        pid2 = fork();
+        switch(pid2)
+        {
+            case -1:
+                ERROR
+            
+            case 0:
+                if (array is not sorted)
+                {
+                    // Acquire semaphore A3
+                    // Acquire semaphore A5
+                    if (segment is not sorted)
+                    {
+                        // Sort segment
+                    }
+                    // Release semaphores.
+                }
+        }
+
+        // Run the process to sort segment 3.
+        pid3 = fork();
+        switch(pid3)
+        {
+            case -1:
+                ERROR
+            
+            case 0:
+                if (array is not sorted)
+                {
+                    // Acquire semaphore A5
+                    if (segment is not sorted)
+                    {
+                        // Sort segment
+                    }
+                    // Release semaphore.
+                }
+        }
+
+        // Run the process to check if array is sorted.
+        pid4 = fork();
+        switch(pid4)
+        {
+            case -1:
+                ERROR
+            
+            case 0:
+                if (array is sorted)
+                {
+                    // Set the sorted flag.
+                }
+        }
+    }
+
+    // Wait for processes to finish.
+
+    // Print results.
+
+    // Deallocate shared memory
+
+    exit(EXIT_SUCCESS);
+}
+
+---------------------------------------------------------------------------------------------------------
